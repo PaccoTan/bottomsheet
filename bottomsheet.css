@@ -1,0 +1,139 @@
+body{
+  margin: 0;
+}
+
+#feedbacks{
+  padding: 0;
+}
+
+.selector{
+  list-style: none;
+  display: block;
+  font-size: 3rem;
+  width: 90%;
+  padding: 0 2%;
+  margin: 3% 3%;
+  position: relative;
+  height: auto;
+}
+
+.selector-text{
+  position: relative;
+  max-width: 70%;
+  margin: 0;
+  display: inline-block;
+  padding-left: 0%;
+  padding-right: 0%;
+}
+
+.container-even{
+  display: flex;
+  width: 90%;
+  left: 5%;
+  position: relative;
+  margin-bottom: 2%;
+}
+
+.container-even > div {
+  flex-grow: 1;
+}
+
+.tab{
+  position: relative;
+  text-align: center;
+  padding: 0.5rem 0;
+  font-size: 2rem;
+  min-height: 2.5rem;
+}
+
+.tab div:focus{
+  border-width: 0 0 3px 0;
+  border-color: #3d9bff;
+  border-style: solid;
+  color: black;
+}
+
+.selector-border{
+  height: 2px;
+  background-color: #cdcdcd;
+}
+
+.selector input[type="checkbox"]{
+  width: 3rem;
+  height: 3rem;
+  margin: 0;
+  position: absolute;
+  top: 50%;
+  margin: -1.5rem 0 0 0;
+  right: 3%;
+}
+
+.selector-header{
+  display: block;
+  font-size: 4rem;
+  width: 90%;
+  padding: 5% 5%;
+  background-color: #3d9bff;
+  color: white;
+  position: relative;
+  font-weight: bold;
+  height: auto;
+  /* background-color: #007aff; */
+}
+
+.selector-submit{
+  font-size: 2rem;
+  border-radius: 1rem;
+  width: 90%;
+  position: relative;
+  padding: 1.5rem 0;
+  font-size: 2rem;
+  margin: 2% 5%;
+  float: right;
+  border-width: 0;
+  background-color: #007aff;
+  color: white;
+}
+
+.selector-submit:hover{
+  background-color: #669df6;
+}
+
+.center-parent{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  color: #70757a;
+}
+
+
+#info{
+  position: relative;
+  font-size: 1.5rem;
+}
+
+#info-bar{
+  position: absolute;
+  bottom: -434.842px;
+  border-width: 0 0.2rem 0 0;
+  border-style: dotted;
+  width: 0;
+  height: 430px;
+  border-color: #cdcdcd;
+}
+
+.text{
+  font-family: Roboto;
+}
+
+.time{
+  color: #3d9bff;
+  font-weight: bold;
+  padding-right: 1vw;
+}
+
+.fa-solid{
+  color: #3d9bff;
+  margin-right: 0.5vw;
+}
