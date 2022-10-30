@@ -1,7 +1,6 @@
 function drawChart(data,categories, destination){
   now = new Date();
   time = now.getHours();
-  console.log(data[categories.indexOf(time)]);
   categories2 = [];
   let start = Math.floor((categories.length-1)%4/2);
   for(i=0; i<categories.length; i++){
@@ -40,6 +39,7 @@ function drawChart(data,categories, destination){
       labels:{
         show: false,
       },
+      tickAmount: 4,
       max: 1,
     },
     chart: {
@@ -70,6 +70,15 @@ function drawChart(data,categories, destination){
         },
       },
       events:{
+        mounted: function (chartContext, config){
+          let width =config.globals.seriesXvalues[0][2] - config.globals.seriesXvalues[0][1];
+          if(categories.indexOf(time) == 0){
+            width = config.globals.seriesXvalues[0][categories.indexOf(time)] + width/2;
+          }else{
+            width = config.globals.seriesXvalues[0][categories.indexOf(time)] - width/2;
+          }
+          fillInfoBar(data[categories.indexOf(time)],time,width,config.globals.svgWidth);
+        },
         dataPointSelection: function(event, chartContext, config) {
           infoBar(chartContext, config);
         }
@@ -147,9 +156,17 @@ function infoBar(_, config){
   let series = config.w.config.series[seriesIndex];
   let data = series.data[index];
   let militaryTime = config.w.config.xaxis.categories[index];
-
   let width = config.w.globals.seriesXvalues[seriesIndex][2]-config.w.globals.seriesXvalues[seriesIndex][1]
-  width = config.w.globals.seriesXvalues[seriesIndex][index]-width/2;
+  if(index == 0){
+    width = config.w.globals.seriesXvalues[seriesIndex][index] + width/2;
+  }else{
+    width = config.w.globals.seriesXvalues[seriesIndex][index]-width/2;
+  }
+  maxWidth = config.w.globals.svgWidth;
+  fillInfoBar(data,militaryTime,width,maxWidth);
+}
+
+function fillInfoBar(value,militaryTime,width,maxWidth){
   let time = "";
   if(militaryTime%12 == 0){
     time+= 12;
@@ -160,16 +177,16 @@ function infoBar(_, config){
 
   let result = "";
   color = "";
-  if(data <= 0.25){
+  if(value <= 0.25){
     result += "Parking lot is mostly empty."
     color = "#7bb662"
-  }else if(data <=0.5){
+  }else if(value <=0.5){
     result += "Parking spaces available."
     color = "#ffcd01"
-  }else if(data <=0.75){
+  }else if(value <=0.75){
     result += "More cars than usual."
     color = "#ff980e"
-  }else if(data <=1){
+  }else if(value <=1){
     result += "Parking spaces limited."
     color = "#d3212c"
   }else {
@@ -180,16 +197,38 @@ function infoBar(_, config){
   el = document.getElementById("info");
   el.innerHTML = `<span class="time"><i class="fa-solid fa-user-group"></i>${time}</span>
                   <span class="text" style ="color: ${color}">${result}</span>`;
+
   box = el.getBoundingClientRect();
   width = width - (box.right-box.left)/2;
-  if(width + box.right - box.left > config.w.globals.svgWidth){
-    width = config.w.globals.svgWidth - box.right + box.left;
-    width = width - config.w.globals.svgWidth*0.03;
+  if(width + box.right - box.left > maxWidth){
+    width = maxWidth - box.right + box.left;
+    width = width - maxWidth*0.03;
   }
   if(width < 0){
-    width = config.w.globals.svgWidth*0.03;
+    width = maxWidth*0.03;
   }
   el.style.left = `${width}px`;
 }
 
-drawChart([0,0.1,0.75,0.25,0.5,1,0,0.1,0.2,0.3,0.4,0.5,0,0.1,0.2,0.3,0.4,0.5,0,0.1,0.2,0.3,0.4],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],"#parking-times")
+jQuery(function($){
+  $('.tab div').on('click', function(){
+    $('.tab .active').removeClass('active');
+    $(this).addClass('active');
+  });
+});
+
+function setDay(){
+  now = new Date();
+  day = now.getDay();
+  day = ["SUN","MON","TUE","WED","THU","FRI","SAT"][day];
+  days = document.getElementsByClassName("center-parent");
+  for(d of days){
+    if(d.innerText == day){
+      d.classList.add("active");
+      break;
+    }
+  }
+}
+
+setDay();
+drawChart([0.3,0.1,0.75,0.25,0.5,1,0,0.1,0.2,0.3,0.4,0.5,0,0.1,0.2,0.3,0.4,0.5,0,0.1,0.2,0.3,0.4],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],"#parking-times")

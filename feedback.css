@@ -26,33 +26,6 @@ body{
   padding-right: 0%;
 }
 
-.container-even{
-  display: flex;
-  width: 90%;
-  left: 5%;
-  position: relative;
-  margin-bottom: 2%;
-}
-
-.container-even > div {
-  flex-grow: 1;
-}
-
-.tab{
-  position: relative;
-  text-align: center;
-  padding: 0.5rem 0;
-  font-size: 2rem;
-  min-height: 2.5rem;
-}
-
-.tab div:focus{
-  border-width: 0 0 3px 0;
-  border-color: #3d9bff;
-  border-style: solid;
-  color: black;
-}
-
 .selector-border{
   height: 2px;
   background-color: #cdcdcd;
@@ -97,43 +70,4 @@ body{
 
 .selector-submit:hover{
   background-color: #669df6;
-}
-
-.center-parent{
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
-  color: #70757a;
-}
-
-
-#info{
-  position: relative;
-  font-size: 1.5rem;
-}
-
-#info-bar{
-  position: absolute;
-  bottom: -434.842px;
-  border-width: 0 0.2rem 0 0;
-  border-style: dotted;
-  width: 0;
-  height: 430px;
-  border-color: #cdcdcd;
-}
-
-.text{
-  font-family: Roboto;
-}
-
-.time{
-  color: #3d9bff;
-  font-weight: bold;
-  padding-right: 1vw;
-}
-
-.fa-solid{
-  color: #3d9bff;
-  margin-right: 0.5vw;
 }
