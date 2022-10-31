@@ -1,3 +1,5 @@
+data = [];
+chart = null;
 function drawChart(data,categories, destination){
   now = new Date();
   time = now.getHours();
@@ -79,6 +81,16 @@ function drawChart(data,categories, destination){
           }
           fillInfoBar(data[categories.indexOf(time)],time,width,config.globals.svgWidth);
         },
+        updated: function (chartContext, config){
+          let width =config.globals.seriesXvalues[0][2] - config.globals.seriesXvalues[0][1];
+          if(categories.indexOf(time) == 0){
+            width = config.globals.seriesXvalues[0][categories.indexOf(time)] + width/2;
+          }else{
+            width = config.globals.seriesXvalues[0][categories.indexOf(time)] - width/2;
+          }
+          val = config.globals.series[0][categories.indexOf(time)];
+          fillInfoBar(val,time,width,config.globals.svgWidth);
+        },
         dataPointSelection: function(event, chartContext, config) {
           infoBar(chartContext, config);
         }
@@ -145,8 +157,9 @@ function drawChart(data,categories, destination){
       },
     }
   };
-
-  var chart = new ApexCharts(document.querySelector(destination), options);
+  if(chart == null){
+    chart = new ApexCharts(document.querySelector(destination), options);
+  }
   chart.render();
 }
 
@@ -220,6 +233,8 @@ jQuery(function($){
 function setDay(){
   now = new Date();
   day = now.getDay();
+  hours = Array.apply(null, Array(24)).map(function (x, i) { return i; })
+  drawChart(data[day],hours, "#parking-times");
   day = ["SUN","MON","TUE","WED","THU","FRI","SAT"][day];
   days = document.getElementsByClassName("center-parent");
   for(d of days){
@@ -230,5 +245,43 @@ function setDay(){
   }
 }
 
+
+// drawChart([0.3,0.1,0.75,0.25,0.5,1,0,0.1,0.2,0.3,0.4,0.5,0,0.1,0.2,0.3,0.4,0.5,0,0.1,0.2,0.3,0.4],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],"#parking-times")
+
+function getOccupancy(start,end,lotName){
+  xhr = new XMLHttpRequest();
+  xhr.open("GET", `http://localhost:3000/occupancy?start=${start}&end=${end}&lotName=${lotName}`, false)
+  xhr.send(null);
+  range = JSON.parse(xhr.responseText);
+  return range;
+}
+
+function setData(lotName){
+  now = new Date();
+  end = Math.floor(now.getTime / 1000);
+  start = now.setDate((now.getMonth()-1));
+  range = getOccupancy(start,end,lotName);
+  let dayHour = Array(7).fill().map(() => Array(24).fill(0));
+  let count = Array(7).fill().map(() => Array(24).fill(0));
+  for(r of range){
+    t = new Date(r.time*1000);
+    dayHour[t.getDay()][t.getHours()] += r.info.num_parked/r.info.max_occup;
+    count[t.getDay()][t.getHours()] += 1;
+  }
+  for(i =0; i<dayHour.length; i++){
+    for(j=0; j<dayHour[i].length; j++){
+      if(count[i][j] == 0){
+        continue;
+      }
+      dayHour[i][j] = dayHour[i][j]/count[i][j];
+    }
+  }
+  data = dayHour;
+}
+
+function changeDay(i){
+  chart.updateSeries([{data: data[i]}])
+}
+
+setData("WCA North Lot");
 setDay();
-drawChart([0.3,0.1,0.75,0.25,0.5,1,0,0.1,0.2,0.3,0.4,0.5,0,0.1,0.2,0.3,0.4,0.5,0,0.1,0.2,0.3,0.4],[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22],"#parking-times")

@@ -29,7 +29,7 @@ function createSelectors(el,options){
 function submitSelected(el){
   if(selected.length > 0){
     feedback = {
-      createdAt: new Date().getTime(),
+      createdAt: Math.floor(new Date().getTime()/1000),
       lotName: testInfo.lotName,
       userID: testInfo.userId,
       feedback: selected,
