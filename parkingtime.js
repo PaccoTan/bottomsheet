@@ -89,6 +89,7 @@ function drawChart(data,categories, destination){
             width = config.globals.seriesXvalues[0][categories.indexOf(time)] - width/2;
           }
           val = config.globals.series[0][categories.indexOf(time)];
+          console.log(config)
           fillInfoBar(val,time,width,config.globals.svgWidth);
         },
         dataPointSelection: function(event, chartContext, config) {
@@ -259,8 +260,9 @@ function getOccupancy(start,end,lotName){
 function setData(lotName){
   now = new Date();
   end = Math.floor(now.getTime / 1000);
-  start = now.setDate((now.getMonth()-1));
+  start = Math.floor(now.setMonth((now.getMonth()-1))/1000);
   range = getOccupancy(start,end,lotName);
+  console.log(range)
   let dayHour = Array(7).fill().map(() => Array(24).fill(0));
   let count = Array(7).fill().map(() => Array(24).fill(0));
   for(r of range){
@@ -283,5 +285,5 @@ function changeDay(i){
   chart.updateSeries([{data: data[i]}])
 }
 
-setData("WCA North Lot");
+setData("Touchdown Village Commuter Lot");
 setDay();
